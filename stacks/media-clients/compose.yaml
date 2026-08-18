@@ -1,0 +1,18 @@
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    labels:
+      caddy: http://jellyfin.janosik.lan
+      caddy.reverse_proxy: jellyfin:8096
+    env_file: ../../apps/jellyfin/.env
+    volumes:
+      - ../../apps/jellyfin/config:/config
+      - /mnt/hdd/data/media:/data/media
+    restart: unless-stopped
+    networks:
+      - proxy-net
+
+networks:
+  proxy-net:
+    external: true

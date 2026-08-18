@@ -1,0 +1,62 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    labels:
+      caddy_0: http://qbittorrent.janosik.lan
+      caddy_0.reverse_proxy: gluetun:8080
+#      caddy_1: http://prowlarr.janosik.lan
+#      caddy_1.reverse_proxy: prowlarr:9696
+    networks:
+      - proxy-net
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    env_file: ../../apps/gluetun/.env 
+    restart: unless-stopped
+
+  caddy:
+    image: lucaslorentz/caddy-docker-proxy:ci-alpine
+    container_name: caddy
+    networks:
+      - proxy-net
+    environment:
+      - CADDY_INGRESS_NETWORKS=proxy-net
+    ports:
+      - 80:80
+      - 443:443/tcp
+      - 443:443/udp
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../../apps/caddy/caddy_data:/data
+    restart: unless-stopped
+
+  adguardhome:
+    image: adguard/adguardhome
+    container_name: adguardhome
+    labels: 
+      caddy: http://adguard.janosik.lan
+      caddy.reverse_proxy: adguardhome:80
+    networks:
+      adguardvlan:
+          ipv4_address: 192.168.4.225
+      proxy-net:
+    volumes:
+      - ../../apps/adguardhome/work:/opt/adguardhome/work
+      - ../../apps/adguardhome/config:/opt/adguardhome/conf
+    restart: unless-stopped
+
+networks:
+  proxy-net:
+    external: true
+  adguardvlan:
+    name: adguardvlan
+    driver: macvlan
+    driver_opts:
+      parent: enp0s31f6
+    ipam:
+      config:
+        - subnet: 192.168.4.0/24
+          ip_range: 192.168.4.225/32
+          gateway: 192.168.4.1

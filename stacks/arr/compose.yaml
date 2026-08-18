@@ -1,0 +1,74 @@
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    labels:
+      caddy: http://prowlarr.janosik.lan
+      caddy.reverse_proxy: prowlarr:9696
+    networks:
+      - arr-internal
+      - proxy-net
+    env_file: ../../apps/prowlarr/.env
+    volumes:
+      - ../../apps/prowlarr/config:/config
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    labels:
+      caddy: http://sonarr.janosik.lan
+      caddy.reverse_proxy: sonarr:8989
+    networks:
+      - proxy-net
+    env_file: ../../apps/sonarr/.env
+    volumes:
+      - ../../apps/sonarr/config:/config
+      - /mnt/hdd/data:/data
+    restart: unless-stopped
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    labels:
+      caddy: http://lidarr.janosik.lan
+      caddy.reverse_proxy: lidarr:8686
+    networks:
+      - proxy-net
+    env_file: ../../apps/lidarr/.env
+    volumes:
+      - ../../apps/lidarr/config:/config
+      - /mnt/hdd/data:/data
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    labels:
+      caddy: http://radarr.janosik.lan
+      caddy.reverse_proxy: radarr:7878
+    networks:
+      - proxy-net
+    env_file: ../../apps/radarr/.env
+    volumes:
+      - ../../apps/radarr/config:/config
+      - /mnt/hdd/data:/data
+    restart: unless-stopped
+
+  flaresolverr:
+    # DockerHub mirror flaresolverr/flaresolverr:latest
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    networks:
+      - arr-internal
+    env_file: ../../apps/flaresolverr/.env
+    volumes:
+      - ../../apps/flaresolverr/config:/config
+    restart: unless-stopped
+
+networks:
+  proxy-net:
+    external: true
+  # Used for flaresolverr to talk to prowlarr
+  arr-internal:
+    name: arr-internal

@@ -1,0 +1,15 @@
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    env_file: ../../apps/qbittorrent/.env
+    volumes:
+      - ../../apps/qbittorrent/config:/config
+      - /mnt/hdd/data/torrents:/data/torrents
+    stop_grace_period: "10s"
+    restart: unless-stopped
+    network_mode: "service:gluetun"
+
+networks:
+  proxy-net:
+    external: true

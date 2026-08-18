@@ -1,0 +1,7 @@
+include:
+  - path: "stacks/arr/compose.yaml"
+  - path: "stacks/immich/compose.yaml"
+  - path: "stacks/media-clients/compose.yaml"
+  - path: "stacks/torrents/compose.yaml"
+  - path: "stacks/networking/compose.yaml"
+  - path: "stacks/meta/compose.yaml"
