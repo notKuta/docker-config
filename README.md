@@ -1,6 +1,6 @@
 # A personal docker-based homelab configuration
 
-This repository stores my current and up-to-date configuration that I use for my homelab.
+This repository stores my current up-to-date configuration that I use for my homelab.
 Try it out by doing the following (after you've installed Docker engine onto your machine):
 
 ```console
@@ -17,4 +17,4 @@ be a safe pick for an initial distro (also, who doesn't love trying new distros?
 I am unfortunately getting the Nix itch once more (especially after finding out about building
 different machines' generations remotely and then pulling them remotely?! Like, that's **so** awesome!)
 Anyways, I will most likely transfer my current homelab to Nix whenever I can and feel like it. Maybe
-I'll run Nix on my Linux phone... or whenever that becomes usable... (I jest, I jest.)
+I'll run Nix on my Linux phone... whenever that becomes usable... (I jest, I jest.)
